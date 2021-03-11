@@ -83,7 +83,7 @@ class StudentsController extends Controller
         ];
         Validator::make($request->all(), [
             'name' => 'required|max:255',
-            'nim' => 'required|max:12',
+            'nim' => 'required',
             'email' => 'required',
         ], $messages)->validate();
 
@@ -130,6 +130,11 @@ class StudentsController extends Controller
     public function edit(Student $student)
     {
         //
+        $data = [
+            'student' => $student,
+            'title' => 'Student',
+        ];
+        return view('student.edit', $data);
     }
 
     /**
@@ -142,6 +147,45 @@ class StudentsController extends Controller
     public function update(Request $request, Student $student)
     {
         //
+        $messages = [
+            'email.required' => 'We need to know your e-mail address!',
+            'name.required' => 'We need to know your name!',
+            'nim.required' => 'We need to know your NIM!',
+        ];
+        Validator::make($request->all(), [
+            'name' => 'required|max:255',
+            'nim' => 'required',
+            'email' => 'required',
+        ], $messages)->validate();
+
+        // $stud = Student::find($student->id);
+        // return $request;
+        $update = Student::where('id', $student->id)
+            ->update([
+                'name' => $request->name,
+                'nim' => $request->nim,
+                'email' => $request->email,
+            ]);
+
+        // if ($update) {
+        //     $response = [
+        //         'status' => 200,
+        //         'message' => 'success'
+        //     ];
+        //     return response($response);
+        // } else {
+        //     $response = [
+        //         'status' => 400,
+        //         'message' => 'error'
+        //     ];
+        //     return response($response);
+        // }
+
+
+
+        // Student::update($student->id, $request->all()); //harus tambahkan fillable di model
+
+        return redirect('/students')->with('status', 'Succesful');
     }
 
     /**
@@ -153,5 +197,7 @@ class StudentsController extends Controller
     public function destroy(Student $student)
     {
         //
+        Student::destroy($student->id);
+        return redirect('/students')->with('status', 'Succesful');
     }
 }
