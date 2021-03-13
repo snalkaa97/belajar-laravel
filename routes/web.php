@@ -36,3 +36,7 @@ Route::get('/about', 'PagesController@about');
 
 Route::resource('students', 'StudentsController');
 Route::resource('mahasiswa', 'MahasiswaController');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
